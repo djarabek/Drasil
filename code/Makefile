@@ -250,7 +250,7 @@ tracegraphs: $(TRACE_GRAPH_EXAMPLES) ##@Examples Run examples with traceability 
 # Build all the Drasil packages (via 'code' dep.), run all examples, and then
 # test generated artifacts with stable/. Defer 'diff' exit codes to the log
 # checking script.
-test: code ##@Examples Test examples en masse against stable, only failing at the end if there were diffs.
+test: ##@Examples Test examples en masse against stable, only failing at the end if there were diffs.
 	@echo "Running tests (ignoring diff exit codes)..."
 	@$(MAKE) DIFF_PREFIX=- $(TEST_EXAMPLES)
 	@echo ---------------------------------------
@@ -322,9 +322,8 @@ $(filter %$(BUILD_P_SUFFIX), $(BUILD_PACKAGES)): %$(BUILD_P_SUFFIX): check_stack
 # Specific example targets will have the name exampleName_gen.
 # Alternatively, you can run an example by running `stack exec exampleName`.
 $(filter %$(GEN_E_SUFFIX), $(GEN_EXAMPLES)): %$(GEN_E_SUFFIX):
-	stack build $(stackArgs) "$(EEXE)"
 	@mkdir -p "$(BUILD_FOLDER)"
-	cd "$(BUILD_FOLDER)" && $(STACK_EXEC) -- "$(EEXE)"
+	cd "$(BUILD_FOLDER)" && ../bin/"$(EEXE)"
 
 # Compiles GOOL examples to concrete code (Java, C++, etc.)
 # We first build the codegenTest to catch any build errors
@@ -496,7 +495,6 @@ deploy_code_path: $(DCP_EXAMPLES) ##@GOOL Find all code file paths for all examp
 
 # For more information, see the *.hs files in the drasil-website folder.
 website: ##@Deploy First builds all Drasil packages, and then executes the drasil-website.
-	stack build $(stackArgs) "drasil-website"
 	CUR_DIR="$(PWD)/" \
 	DEPLOY_FOLDER="$(CUR_DIR)$(DEPLOY_FOLDER)" \
 	DOCS_FOLDER="$(DOCS_FOLDER)" \
@@ -508,7 +506,7 @@ website: ##@Deploy First builds all Drasil packages, and then executes the drasi
 	PACKAGES="$(PACKAGES)" \
 	TYPEGRAPH_FOLDER="$(TYPEGRAPH_FOLDER)" \
 	CLASSINST_GRAPH_FOLDER="$(CLASSINST_GRAPH_FOLDER)" \
-	$(STACK_EXEC) -- "website"
+	./bin/website
 
 # Prepares a website folder deployable to GitHub Pages using existing artifacts.
 deploy_lite: website ##@Deploy Deploy the Drasil website without regenerating artifacts. For local development.
