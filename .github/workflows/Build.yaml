@@ -14,27 +14,10 @@ jobs:
   build:
     name: "Build"
     runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
     steps:
       - uses: actions/checkout@v6
-
-      - name: "Update apt package list"
-        run: |
-          sudo apt-get update
-
-      - name: "Install core system requirements"
-        run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
-      - name: "Update PATH"
-        run: |
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-      - name: "Install Stack"
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-no-global: true
-          stack-version: 'latest'
 
       - name: "Cache dependencies"
         uses: actions/cache@v5
@@ -42,9 +25,6 @@ jobs:
           path: |
             ~/.stack
           key: ${{ runner.os }}-store-${{ hashFiles('code/stack.yaml') }}
-
-      - name: "Clean previous run"
-        run: make clean
 
       - name: "Install dependencies"
         run: make stackArgs="--no-terminal" deps
