@@ -20,6 +20,7 @@ jobs:
       # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
       - name: Permissions bug workaround
         run: "chown -R $(id -un):$(id -gn) ~"
+        working-directory: .
 
       - uses: actions/checkout@v6
 
