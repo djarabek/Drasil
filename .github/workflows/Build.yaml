@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/djarabek/drasil_fedora:latest
+      env:
+        - LANG=C.UTF-8
+        - LC_ALL=C.UTF-8
     steps:
       # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
       - name: Permissions bug workaround
