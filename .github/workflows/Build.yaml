@@ -58,7 +58,7 @@ jobs:
         run: make code stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations"
 
       - name: "Install"
-        run: stack install --local-dir-path=bin
+        run: stack install --local-bin-path=bin
       
       - uses: actions/upload-artifact@v7
         with:
