@@ -72,5 +72,8 @@ jobs:
           name: bin
           path: code/bin
 
+      - name: "Set permssions"
+        run: "chmod +x bin/*"
+
       - name: "Test built artifacts against stable"
         run: make test test_website
