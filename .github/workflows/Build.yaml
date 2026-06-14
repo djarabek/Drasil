@@ -29,7 +29,9 @@ jobs:
         with:
           path: |
             ~/.stack
-          key: ${{ runner.os }}-store-${{ hashFiles('code/stack.yaml') }}
+          key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
+
+      - run: locale
 
       - name: "Install dependencies"
         run: make stackArgs="--no-terminal" deps
