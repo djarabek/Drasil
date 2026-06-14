@@ -77,3 +77,10 @@ jobs:
 
       - name: "Test built artifacts against stable"
         run: make test test_website
+
+      - name: "Upload logs"
+        if ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: logs
+          path: code/logs
