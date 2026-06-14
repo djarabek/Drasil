@@ -12,23 +12,10 @@ defaults:
     working-directory: code
 jobs:
   build:
-    name: "Build & Test"
-    runs-on: ubuntu-22.04
+    name: "Build"
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
-
-      - name: "Search changes for applicable tests"
-        uses: dorny/paths-filter@v4
-        id: changes
-        with:
-          filters: |
-            tex:
-              - 'code/stable/**/*.tex'
-            md:
-              - code/stable/**/*.md
-              - code/stable/**/book.toml
-            artifacts:
-              - 'code/stable/**/src/**'
 
       - name: "Update apt package list"
         run: |
@@ -38,22 +25,9 @@ jobs:
         run: |
           sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
-      - name: "Install TeX requirements"
-        if: ${{ steps.changes.outputs.tex == 'true' }}
-        run: |
-          sudo apt-get install -y --fix-missing fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
-
-      - name: "Install mdBook"
-        if: ${{ steps.changes.outputs.md == 'true' }}
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          cargo install mdbook
-
       - name: "Update PATH"
         run: |
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo "$HOME/.swift/usr/bin" >> $GITHUB_PATH
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: "Install Stack"
         uses: haskell-actions/setup@v2
@@ -83,29 +57,10 @@ jobs:
       - name: "Build"
         run: make code stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations"
 
-      - name: "Test built artifacts against stable"
-        run: make stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations" NOISY=yes
-
-      - name: "Compile GOOL examples"
-        run: make codegenTest
-
-      - name: "Compile generated TeX artifacts"
-        run: make -j tex SUMMARIZE_TEX=yes
-        if: ${{ steps.changes.outputs.tex == 'true' }}
-
-      - name: "Compile generated software artifacts"
-        if: ${{ steps.changes.outputs.artifacts == 'true' }}
-        run: make gool
-
-      - name: "Generate Haddock docs (as test)"
-        run: make docs
-
-      - name: "Build mdBook Examples"
-        run: make mdbook_build
-        if: ${{ steps.changes.outputs.md == 'true' }}
-
-      - name: "Build website generator"
-        run: make website
-
-      - name: "Test Built Website against Stable Version"
-        run: make test_website NOISY=yes
+      - name: "Install"
+        run: stack install --local-dir-path=bin
+      
+      - uses: actions/upload-artifact@v7
+        with:
+          name: bin
+          path: code/bin
