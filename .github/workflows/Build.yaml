@@ -73,3 +73,26 @@ jobs:
         with:
           name: logs
           path: code/logs
+
+  haddock:
+    name: Haddock
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
+    steps:
+      # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+        working-directory: .
+
+      - uses: actions/checkout@v6
+
+      - name: "Restore cache"
+        uses: actions/cache-restore@v5
+        with:
+          path: |
+            ~/.stack
+          key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
+
+      - name: "Generate Haddock docs (as test)"
+        run: make docs
