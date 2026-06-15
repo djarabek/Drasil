@@ -119,3 +119,20 @@ jobs:
 
       - name: "Compile generated TeX artifacts"
         run: make -j tex SUMMARIZE_TEX=yes
+
+  mdbook:
+    name: mdBook
+    needs: gen
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: generated
+          path: code/build
+
+      - name: "Build mdBook Examples"
+        run: make mdbook_build
