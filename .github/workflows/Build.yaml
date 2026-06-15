@@ -31,38 +31,11 @@ jobs:
             ~/.stack
           key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
 
-      - run: locale
-
       - name: "Install dependencies"
         run: make stackArgs="--no-terminal" deps
 
       - name: "Build"
         run: make code stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations"
-
-      - name: "Install"
-        run: stack install --local-bin-path=bin
-      
-      - uses: actions/upload-artifact@v7
-        with:
-          name: bin
-          path: code/bin
-  
-  gen:
-    name: Generate
-    needs: build
-    runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/djarabek/drasil_fedora:latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/download-artifact@v8
-        with:
-          name: bin
-          path: code/bin
-
-      - name: "Set permssions"
-        run: "chmod +x bin/*"
 
       - name: "Test built artifacts against stable"
         run: make test test_website
@@ -79,6 +52,7 @@ jobs:
         with:
           name: generated
           path: code/build
+          include-hidden-files: true
 
   haddock:
     name: Haddock
@@ -105,7 +79,7 @@ jobs:
 
   latex:
     name: LaTeX
-    needs: gen
+    needs: build
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/djarabek/drasil_fedora:latest
@@ -122,7 +96,7 @@ jobs:
 
   mdbook:
     name: mdBook
-    needs: gen
+    needs: build
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/djarabek/drasil_fedora:latest
@@ -137,7 +111,7 @@ jobs:
       - name: Setup mdBook
         uses: peaceiris/actions-mdbook@v2
         with:
-          mdbook-version: 'latest'
+          mdbook-version: latest
 
       - name: "Build mdBook Examples"
         run: make mdbook_build
