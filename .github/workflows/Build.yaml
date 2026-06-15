@@ -74,6 +74,12 @@ jobs:
           name: logs
           path: code/logs
 
+      - name: "Upload generated artifacts"
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated
+          path: code/build
+
   haddock:
     name: Haddock
     runs-on: ubuntu-24.04
@@ -96,3 +102,19 @@ jobs:
 
       - name: "Generate Haddock docs (as test)"
         run: make docs
+
+  latex:
+    name: LaTeX
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: generated
+          path: code/build
+
+      - name: "Compile generated TeX artifacts"
+        run: make -j tex SUMMARIZE_TEX=yes
