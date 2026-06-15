@@ -322,6 +322,7 @@ $(filter %$(BUILD_P_SUFFIX), $(BUILD_PACKAGES)): %$(BUILD_P_SUFFIX): check_stack
 # Specific example targets will have the name exampleName_gen.
 # Alternatively, you can run an example by running `stack exec exampleName`.
 $(filter %$(GEN_E_SUFFIX), $(GEN_EXAMPLES)): %$(GEN_E_SUFFIX):
+	stack build $(stackArgs) "$(EEXE)"
 	@mkdir -p "$(BUILD_FOLDER)"
 	cd "$(BUILD_FOLDER)" && $(STACK_EXEC) -- "$(EEXE)"
 
