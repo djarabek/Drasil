@@ -134,5 +134,10 @@ jobs:
           name: generated
           path: code/build
 
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: 'latest'
+
       - name: "Build mdBook Examples"
         run: make mdbook_build

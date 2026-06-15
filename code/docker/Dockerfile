@@ -7,11 +7,5 @@ RUN dnf install -y --setopt=install_weak_deps=False \
     && dnf clean all \
     && rm -rf /var/cache/dnf
 
-RUN curl -L -O https://github.com/rust-lang/mdBook/releases/download/v0.5.3/mdbook-v0.5.3-x86_64-unknown-linux-gnu.tar.gz \
-    && tar zxvf mdbook-v0.5.3-x86_64-unknown-linux-gnu.tar.gz \
-    && mkdir -p ~/.local/bin \
-    && mv mdbook ~/.local/bin \
-    && rm mdbook-v0.5.3-x86_64-unknown-linux-gnu.tar.gz
-
 ENV LANG=C.UTF-8
 ENV PATH=/root/.local/bin:$PATH
