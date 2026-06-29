@@ -60,10 +60,10 @@ doccon' = [assumption, dataConst, dataDefn, desSpec, genDefn, goalStmt, inModel,
 
 dataConst :: CI
 
-------------------------------------------------------------------------------------------------------------------------------
--- | CI       |                  |    uid      |         term                                   | abbreviation | ConceptDomain
-------------------------------------------------------------------------------------------------------------------------------
-dataConst   = commonIdeaWithDict "dataConst"   (cn' "data constraint")                               "DC"      [softEng]
+----------------------------------------------------------------------------------------------------------------------
+-- | CI       |          |    uid              |        term                            | abbreviation | ConceptDomain
+----------------------------------------------------------------------------------------------------------------------
+dataConst   = commonIdea (mkUid "dataConst")   (cn' "data constraint")                       "DC"      [softEng]
 
 ---------------------------------------------------------------------
 
@@ -130,7 +130,7 @@ video           = idea' (mkUid "video")          (cn'    "video"              )
 year            = idea' (mkUid "year")           (cn'    "year"               )
 scpOfTheProjS   = idea' (mkUid "scpOfTheProj")   (cn'    "scope of the project") -- temporary generated for test
 
-notApp          = mkIdea "notApp" (nounPhraseSP "not applicable")   (Just "N/A")
+notApp          = idea (mkUid "notApp") (nounPhraseSP "not applicable")   "N/A"
 
 methAndAnls, procForAnls :: IdeaDict
 

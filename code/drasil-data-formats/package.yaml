@@ -38,6 +38,7 @@ tests:
     dependencies:
     - drasil-file-handling
     - drasil-data-formats
+    - drasil-testing-kit
     - filepath
     - tasty
     - tasty-hunit
