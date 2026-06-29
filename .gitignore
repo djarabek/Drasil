@@ -45,6 +45,7 @@ code/traceygraphs
 code/logs
 code/stable/*/src/*/html
 code/stable/*/src/*/latex
+code/bin
 */Projectile/output.txt
 
 # Website

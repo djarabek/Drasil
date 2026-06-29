@@ -347,7 +347,7 @@ $(filter %$(INSTALL_E_SUFFIX), $(INSTALL_EXAMPLES)): %$(INSTALL_E_SUFFIX):
 # Same as above targets; run individual examples but create traceability graphs
 # for each example run. Needs Graphviz to run. Graphs generate in svg, pdf, and png formats.
 # Specific example targets will have the name exampleName_trace_graph.
-$(filter %$(TRACE_GRAPH_SUFFIX), $(TRACE_GRAPH_EXAMPLES)): %$(TRACE_GRAPH_SUFFIX): %$(GEN_E_SUFFIX) graphmod
+$(filter %$(TRACE_GRAPH_SUFFIX), $(TRACE_GRAPH_EXAMPLES)): %$(TRACE_GRAPH_SUFFIX):
 	@echo Making traceability graphs for "$(EEXE)"
 	@if [ -d "$(BUILD_FOLDER)$(EDIR)/$(TRACEY_GRAPH_FOLDER)" ]; then \
 		cd "$(BUILD_FOLDER)$(EDIR)/$(TRACEY_GRAPH_FOLDER)" && for graph in $(TRACEY_GRAPH_NAMES); do \
@@ -390,7 +390,7 @@ $(filter %$(TEX_E_SUFFIX), $(TEX_EXAMPLES)): %$(TEX_E_SUFFIX): %$(TRACE_GRAPH_SU
 
 # Build individual example mdBook SRSs.
 # Targets will have the form exampleName_mdBook_build.
-$(filter %$(MDBOOK_BUILD_E_SUFFIX), $(MDBOOK_BUILD_EXAMPLES)): %$(MDBOOK_BUILD_E_SUFFIX): $(CLEAN_GF_PREFIX)$(LOG_FOLDER_NAME) %$(GEN_E_SUFFIX) %$(TRACE_GRAPH_SUFFIX)
+$(filter %$(MDBOOK_BUILD_E_SUFFIX), $(MDBOOK_BUILD_EXAMPLES)): %$(MDBOOK_BUILD_E_SUFFIX): $(CLEAN_GF_PREFIX)$(LOG_FOLDER_NAME) %$(TRACE_GRAPH_SUFFIX)
 	if [ -d "$(BUILD_FOLDER)$(EDIR)/SRS/mdBook" ]; then \
 		- "$(SHELL)" "$(SCRIPT_FOLDER)copy_example_assets.sh" "$(BUILD_FOLDER)$(EDIR)/SRS/mdBook" ; \
 		mdbook build "$(BUILD_FOLDER)$(EDIR)/SRS/mdBook" ; \

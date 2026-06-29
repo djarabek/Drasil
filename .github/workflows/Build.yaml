@@ -12,70 +12,24 @@ defaults:
     working-directory: code
 jobs:
   build:
-    name: "Build & Test"
-    runs-on: ubuntu-22.04
+    name: "Build"
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
     steps:
+      # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+        working-directory: .
+
       - uses: actions/checkout@v7
-
-      - name: "Search changes for applicable tests"
-        uses: dorny/paths-filter@v4
-        id: changes
-        with:
-          filters: |
-            tex:
-              - 'code/stable/**/*.tex'
-            md:
-              - code/stable/**/*.md
-              - code/stable/**/book.toml
-            artifacts:
-              - 'code/stable/**/src/**'
-
-      - name: "Update apt package list"
-        run: |
-          sudo apt-get update
-
-      - name: "Install core system requirements"
-        run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
-      - name: "Install TeX requirements"
-        if: ${{ steps.changes.outputs.tex == 'true' }}
-        run: |
-          sudo apt-get install -y --fix-missing fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
-
-      - name: "Install mdBook"
-        if: ${{ steps.changes.outputs.md == 'true' }}
-        run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-          cargo install mdbook
-
-      - name: "Update PATH"
-        run: |
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          echo "$HOME/.swift/usr/bin" >> $GITHUB_PATH
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-
-      - name: "Install Stack"
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-no-global: true
-          stack-version: 'latest'
 
       - name: "Cache dependencies"
         uses: actions/cache@v5
         with:
           path: |
             ~/.stack
-            ~/.cabal/packages
-            ~/.cabal/store
-            code/.stack-work/
-            code/website/.stack-work/
-            ~/.local/bin/graphmod
-          key: ${{ runner.os }}-store-${{ hashFiles('code/stack.yaml') }}
-
-      - name: "Clean previous run"
-        run: make clean
+          key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
 
       - name: "Install dependencies"
         run: make stackArgs="--no-terminal" deps
@@ -84,28 +38,80 @@ jobs:
         run: make code stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations"
 
       - name: "Test built artifacts against stable"
-        run: make stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations" NOISY=yes
+        run: make test test_website
 
-      - name: "Compile GOOL examples"
-        run: make codegenTest
+      - name: "Upload logs"
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: logs
+          path: code/logs
 
-      - name: "Compile generated TeX artifacts"
-        run: make -j tex SUMMARIZE_TEX=yes
-        if: ${{ steps.changes.outputs.tex == 'true' }}
+      - name: "Upload generated artifacts"
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated
+          path: code/build
+          include-hidden-files: true
 
-      - name: "Compile generated software artifacts"
-        if: ${{ steps.changes.outputs.artifacts == 'true' }}
-        run: make gool
+  haddock:
+    name: Haddock
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
+    steps:
+      # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+        working-directory: .
+
+      - uses: actions/checkout@v7
+
+      - name: "Restore cache"
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            ~/.stack
+          key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
 
       - name: "Generate Haddock docs (as test)"
         run: make docs
 
+  latex:
+    name: LaTeX
+    needs: build
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: generated
+          path: code/build
+
+      - name: "Compile generated TeX artifacts"
+        run: make -j tex SUMMARIZE_TEX=yes
+
+  mdbook:
+    name: mdBook
+    needs: build
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/djarabek/drasil_fedora:latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/download-artifact@v8
+        with:
+          name: generated
+          path: code/build
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: latest
+
       - name: "Build mdBook Examples"
         run: make mdbook_build
-        if: ${{ steps.changes.outputs.md == 'true' }}
-
-      - name: "Build website generator"
-        run: make website
-
-      - name: "Test Built Website against Stable Version"
-        run: make test_website NOISY=yes
