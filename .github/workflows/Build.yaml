@@ -14,13 +14,14 @@ jobs:
   build:
     name: "Build"
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/djarabek/drasil_fedora:latest
     steps:
-      # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
-      - name: Permissions bug workaround
-        run: "chown -R $(id -un):$(id -gn) ~"
-        working-directory: .
+      - name: "Update apt package list"
+        run: |
+          sudo apt-get update
+
+      - name: "Install core system requirements"
+        run: |
+          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
       - uses: actions/checkout@v7
 
@@ -57,13 +58,14 @@ jobs:
   haddock:
     name: Haddock
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/djarabek/drasil_fedora:latest
     steps:
-      # https://github.com/commercialhaskell/stack/issues/2187#issuecomment-1013718541
-      - name: Permissions bug workaround
-        run: "chown -R $(id -un):$(id -gn) ~"
-        working-directory: .
+      - name: "Update apt package list"
+        run: |
+          sudo apt-get update
+
+      - name: "Install core system requirements"
+        run: |
+          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
       - uses: actions/checkout@v7
 
@@ -81,9 +83,19 @@ jobs:
     name: LaTeX
     needs: build
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/djarabek/drasil_fedora:latest
     steps:
+      - name: "Update apt package list"
+        run: |
+          sudo apt-get update
+
+      - name: "Install core system requirements"
+        run: |
+          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
+
+      - name: "Install TeX requirements"
+        run: |
+          sudo apt-get install -y --fix-missing fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
+
       - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v8
@@ -98,10 +110,14 @@ jobs:
     name: mdBook
     needs: build
     runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/djarabek/drasil_fedora:latest
     steps:
-      - uses: actions/checkout@v7
+      - name: "Update apt package list"
+        run: |
+          sudo apt-get update
+
+      - name: "Install core system requirements"
+        run: |
+          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
       - uses: actions/download-artifact@v8
         with:
