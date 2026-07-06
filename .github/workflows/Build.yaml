@@ -59,6 +59,8 @@ jobs:
     name: Haddock
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v7
+
       - name: "Update apt package list"
         run: |
           sudo apt-get update
@@ -66,8 +68,6 @@ jobs:
       - name: "Install core system requirements"
         run: |
           sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
-      - uses: actions/checkout@v7
 
       - name: "Restore cache"
         uses: actions/cache/restore@v5
