@@ -15,6 +15,8 @@ jobs:
     name: "Build"
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v7
+
       - name: "Update apt package list"
         run: |
           sudo apt-get update
@@ -22,8 +24,6 @@ jobs:
       - name: "Install core system requirements"
         run: |
           sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
-      - uses: actions/checkout@v7
 
       - name: "Cache dependencies"
         uses: actions/cache@v6
@@ -84,6 +84,8 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v7
+
       - name: "Update apt package list"
         run: |
           sudo apt-get update
@@ -95,8 +97,6 @@ jobs:
       - name: "Install TeX requirements"
         run: |
           sudo apt-get install -y --fix-missing fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
-
-      - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v8
         with:
@@ -111,6 +111,8 @@ jobs:
     needs: build
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/checkout@v7
+  
       - name: "Update apt package list"
         run: |
           sudo apt-get update
