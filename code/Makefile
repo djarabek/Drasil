@@ -325,9 +325,11 @@ $(filter %$(BUILD_P_SUFFIX), $(BUILD_PACKAGES)): %$(BUILD_P_SUFFIX): check_stack
 # Specific example targets will have the name exampleName_gen.
 # Alternatively, you can run an example by running `stack exec exampleName`.
 $(filter %$(GEN_E_SUFFIX), $(GEN_EXAMPLES)): %$(GEN_E_SUFFIX):
+ifneq ($(SKIP_GEN), 1)
 	stack build $(stackBuildArgs) "$(EEXE)"
 	@mkdir -p "$(BUILD_FOLDER)"
 	cd "$(BUILD_FOLDER)" && $(STACK_EXEC) -- "$(EEXE)"
+endif
 
 # Compiles GOOL examples to concrete code (Java, C++, etc.)
 # We first build the codegenTest to catch any build errors
@@ -347,7 +349,7 @@ $(filter %$(INSTALL_E_SUFFIX), $(INSTALL_EXAMPLES)): %$(INSTALL_E_SUFFIX):
 # Same as above targets; run individual examples but create traceability graphs
 # for each example run. Needs Graphviz to run. Graphs generate in svg, pdf, and png formats.
 # Specific example targets will have the name exampleName_trace_graph.
-$(filter %$(TRACE_GRAPH_SUFFIX), $(TRACE_GRAPH_EXAMPLES)): %$(TRACE_GRAPH_SUFFIX):
+$(filter %$(TRACE_GRAPH_SUFFIX), $(TRACE_GRAPH_EXAMPLES)): %$(TRACE_GRAPH_SUFFIX): %$(GEN_E_SUFFIX)
 	@echo Making traceability graphs for "$(EEXE)"
 	@if [ -d "$(BUILD_FOLDER)$(EDIR)/$(TRACEY_GRAPH_FOLDER)" ]; then \
 		cd "$(BUILD_FOLDER)$(EDIR)/$(TRACEY_GRAPH_FOLDER)" && for graph in $(TRACEY_GRAPH_NAMES); do \
@@ -390,7 +392,7 @@ $(filter %$(TEX_E_SUFFIX), $(TEX_EXAMPLES)): %$(TEX_E_SUFFIX): %$(TRACE_GRAPH_SU
 
 # Build individual example mdBook SRSs.
 # Targets will have the form exampleName_mdBook_build.
-$(filter %$(MDBOOK_BUILD_E_SUFFIX), $(MDBOOK_BUILD_EXAMPLES)): %$(MDBOOK_BUILD_E_SUFFIX): $(CLEAN_GF_PREFIX)$(LOG_FOLDER_NAME) %$(TRACE_GRAPH_SUFFIX)
+$(filter %$(MDBOOK_BUILD_E_SUFFIX), $(MDBOOK_BUILD_EXAMPLES)): %$(MDBOOK_BUILD_E_SUFFIX): $(CLEAN_GF_PREFIX)$(LOG_FOLDER_NAME) %$(GEN_E_SUFFIX) %$(TRACE_GRAPH_SUFFIX)
 	if [ -d "$(BUILD_FOLDER)$(EDIR)/SRS/mdBook" ]; then \
 		- "$(SHELL)" "$(SCRIPT_FOLDER)copy_example_assets.sh" "$(BUILD_FOLDER)$(EDIR)/SRS/mdBook" ; \
 		mdbook build "$(BUILD_FOLDER)$(EDIR)/SRS/mdBook" ; \
