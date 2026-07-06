@@ -30,7 +30,7 @@ jobs:
         with:
           path: |
             ~/.stack
-          key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
+          key: ${{ runner.os }}-store-v3-${{ hashFiles('code/stack.yaml') }}
 
       - name: "Install dependencies"
         run: make stackArgs="--no-terminal" deps
@@ -74,7 +74,7 @@ jobs:
         with:
           path: |
             ~/.stack
-          key: ${{ runner.os }}-store-v2-${{ hashFiles('code/stack.yaml') }}
+          key: ${{ runner.os }}-store-v3-${{ hashFiles('code/stack.yaml') }}
 
       - name: "Generate Haddock docs (as test)"
         run: make docs
