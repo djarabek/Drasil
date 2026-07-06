@@ -13,7 +13,7 @@ defaults:
 jobs:
   build:
     name: "Build"
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -57,7 +57,7 @@ jobs:
 
   haddock:
     name: Haddock
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -82,7 +82,7 @@ jobs:
   latex:
     name: LaTeX
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -109,7 +109,7 @@ jobs:
   mdbook:
     name: mdBook
     needs: build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
   
