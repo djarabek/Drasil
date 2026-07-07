@@ -108,12 +108,12 @@ jobs:
           name: generated
           path: code/build
 
-      - name: actions/download-artifact@v8
+      - uses: actions/download-artifact@v8
         with:
           name: generated-gooltest
           path: code/drasil-code/test/build
 
-      - name: "Compile GOOL Examples"
+      - uses: "Compile GOOL Examples"
         run: make codegenTest SKIP_GEN=1
       
       - name: "Compile generated software artifacts"
