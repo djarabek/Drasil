@@ -15,9 +15,9 @@ jobs:
     name: "Build"
     runs-on: ubuntu-24.04
     outputs:
-      tex: ${{ steps.changes.outputs.tex == 'true' }}
-      md: ${{ steps.changes.outputs.md == 'true' }}
-      gencode: ${{ steps.changes.outputs.gencode == 'true' }}
+      tex: ${{ steps.changes.outputs.tex}}
+      md: ${{ steps.changes.outputs.md }}
+      gencode: ${{ steps.changes.outputs.gencode }}
     steps:
       - uses: actions/checkout@v7
 
@@ -26,12 +26,19 @@ jobs:
         id: changes
         with:
           filters: |
+            build: &build
+              - '.github/workflows/Build.yaml'
+              - 'code/Makefile'
+              - 'code/scripts/**'
             tex:
+              - *build
               - 'code/stable/**/*.tex'
             md:
+              - *build
               - code/stable/**/*.md
               - code/stable/**/book.toml
             gencode:
+              - *build
               - 'code/stable/**/src/**'
               - 'code/drasil-code/test/golden/**'
 
