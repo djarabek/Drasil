@@ -94,7 +94,7 @@ jobs:
     name: "Compile GOOL"
     needs: build
     runs-on: ubuntu-24.04
-    if: ${{ needs.build.outputs.gencode }}
+    if: ${{ needs.build.outputs.gencode == 'true' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -128,7 +128,7 @@ jobs:
     name: LaTeX
     needs: build
     runs-on: ubuntu-26.04 # Ubuntu 26 has newer TeX packages that are significantly faster
-    if: ${{ needs.build.outputs.tex }}
+    if: ${{ needs.build.outputs.tex == 'true' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -153,7 +153,7 @@ jobs:
     name: mdBook
     needs: build
     runs-on: ubuntu-24.04
-    if: ${{ needs.build.outputs.md }}
+    if: ${{ needs.build.outputs.md == 'true' }}
     steps:
       - uses: actions/checkout@v7
 
