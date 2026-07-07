@@ -121,15 +121,19 @@ jobs:
         run: |
           sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
+      - name: "Download mdBook"
+        environment:
+          MDBOOK_VERSION: 0.5.4
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl -L -O https://github.com/rust-lang/mdBook/releases/download/v$MDBOOK_VERSION/mdbook-v$MDBOOK_VERSION-x86_64-unknown-linux-gnu.tar.gz
+          tar zxvf mdbook-v$MDBOOK_VERSION-x86_64-unknown-linux-gnu.tar.gz
+          mv mdbook ~/.local/bin
+
       - uses: actions/download-artifact@v8
         with:
           name: generated
           path: code/build
-
-      - name: Setup mdBook
-        uses: peaceiris/actions-mdbook@v2
-        with:
-          mdbook-version: latest
 
       - name: "Build mdBook Examples"
         run: make mdbook_build SKIP_GEN=1
