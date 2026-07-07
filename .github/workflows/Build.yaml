@@ -172,7 +172,7 @@ jobs:
           path: code/build
 
       - name: "Compile generated TeX artifacts"
-        run: make tex SKIP_GEN=1 SUMMARIZE_TEX=yes
+        run: make -j4 tex SKIP_GEN=1 SUMMARIZE_TEX=yes
 
       - name: "Upload logs"
         if: ${{ failure() }}
