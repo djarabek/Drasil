@@ -83,9 +83,9 @@ jobs:
         run: |
           sudo apt-get update
 
-      - name: "Install core system requirements"
+      - name: "Install requirements"
         run: |
-          sudo apt-get install -y --fix-missing python3 g++ default-jdk-headless mono-devel
+          sudo apt-get install -y g++ default-jdk-headless mono-devel
 
       - uses: actions/download-artifact@v8
         with:
@@ -116,7 +116,7 @@ jobs:
 
       - name: "Install TeX requirements"
         run: |
-          sudo apt-get install -y --fix-missing graphviz fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
+          sudo apt-get install -y graphviz fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
 
       - uses: actions/download-artifact@v8
         with:
@@ -132,6 +132,14 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
+
+      - name: "Update apt package list"
+        run: |
+          sudo apt-get update
+
+      - name: "Install requirements"
+        run: |
+          sudo apt-get install -y graphviz
 
       - name: "Download mdBook"
         env:
