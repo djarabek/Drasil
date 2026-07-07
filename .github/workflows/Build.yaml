@@ -87,8 +87,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: "Restore cache"
-        uses: actions/cache/restore@v5
+      - name: "Restore dependency cache"
+        uses: actions/cache/restore@v6
         with:
           path: |
             ~/.stack
@@ -154,7 +154,7 @@ jobs:
           path: code/build
 
       - name: "Compile generated TeX artifacts"
-        run: make -j tex SKIP_GEN=1 SUMMARIZE_TEX=yes
+        run: make -j4 tex SKIP_GEN=1 SUMMARIZE_TEX=yes
 
   mdbook:
     name: mdBook
