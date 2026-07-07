@@ -17,14 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: "Update apt package list"
-        run: |
-          sudo apt-get update
-
-      - name: "Install core system requirements"
-        run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
       - name: "Cache dependencies"
         uses: actions/cache@v6
         with:
@@ -70,14 +62,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: "Update apt package list"
-        run: |
-          sudo apt-get update
-
-      - name: "Install core system requirements"
-        run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
       - name: "Restore cache"
         uses: actions/cache/restore@v5
         with:
@@ -101,7 +85,7 @@ jobs:
 
       - name: "Install core system requirements"
         run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
+          sudo apt-get install -y --fix-missing python3 g++ default-jdk-headless mono-devel
 
       - uses: actions/download-artifact@v8
         with:
@@ -130,13 +114,9 @@ jobs:
         run: |
           sudo apt-get update
 
-      - name: "Install core system requirements"
-        run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
-
       - name: "Install TeX requirements"
         run: |
-          sudo apt-get install -y --fix-missing fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
+          sudo apt-get install -y --fix-missing graphviz fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
 
       - uses: actions/download-artifact@v8
         with:
@@ -152,14 +132,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
-  
-      - name: "Update apt package list"
-        run: |
-          sudo apt-get update
-
-      - name: "Install core system requirements"
-        run: |
-          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
       - name: "Download mdBook"
         env:
