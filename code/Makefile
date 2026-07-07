@@ -339,8 +339,10 @@ endif
 # Then we run the codeGenTest, ignoring the exit code and not printing any output,
 # which will write the generated code to the build folder.
 $(GOOLTEST)$(GEN_E_SUFFIX):
+ifneq ($(SKIP_GEN), 1)
 	stack build $(stackBuildArgs) drasil-code
 	-stack test $(stackArgs) "drasil-code:test:$(GOOLTEST_EXE)" --test-arguments="--quiet"
+endif
 
 $(GOOLTEST)$(TEST_E_SUFFIX):
 	stack test $(stackArgs) "drasil-code:test:$(GOOLTEST_EXE)"

@@ -58,6 +58,12 @@ jobs:
           path: code/build
           include-hidden-files: true
 
+      - name: "Upload gooltest artifacts"
+        uses: actions/upload-artifact@v7
+        with:
+          name: generated-gooltest
+          path: code/drasil-code/test/build
+
   haddock:
     name: Haddock
     runs-on: ubuntu-24.04
@@ -81,6 +87,37 @@ jobs:
 
       - name: "Generate Haddock docs (as test)"
         run: make docs
+
+  gooltest:
+    name: "Compile GOOL"
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: "Update apt package list"
+        run: |
+          sudo apt-get update
+
+      - name: "Install core system requirements"
+        run: |
+          sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
+
+      - name: actions/download-artifact@v8
+        with:
+          name: generated
+          path: code/build
+
+      - name: actions/download-artifact@v8
+        with:
+          name: generated-gooltest
+          path: code/drasil-code/test/build
+
+      - name: "Compile GOOL Examples"
+        run: make codegenTest SKIP_GEN=1
+      
+      - name: "Compile generated software artifacts"
+        run: make gool SKIP_GEN=1
 
   latex:
     name: LaTeX
