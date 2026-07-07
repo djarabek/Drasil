@@ -103,7 +103,7 @@ jobs:
         run: |
           sudo apt-get install -y --fix-missing libgmp-dev python3 graphviz g++ default-jdk mono-devel
 
-      - name: actions/download-artifact@v8
+      - uses: actions/download-artifact@v8
         with:
           name: generated
           path: code/build
@@ -113,7 +113,7 @@ jobs:
           name: generated-gooltest
           path: code/drasil-code/test/build
 
-      - uses: "Compile GOOL Examples"
+      - name: "Compile GOOL Examples"
         run: make codegenTest SKIP_GEN=1
       
       - name: "Compile generated software artifacts"
