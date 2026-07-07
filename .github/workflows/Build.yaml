@@ -85,14 +85,16 @@ jobs:
 
       - name: "Install requirements"
         run: |
-          sudo apt-get install -y g++ default-jdk-headless mono-devel
+          sudo apt-get install -y default-jdk-headless mono-devel
 
-      - uses: actions/download-artifact@v8
+      - name: "Download generated artifacts"
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: code/build
 
-      - uses: actions/download-artifact@v8
+      - name: "Download gooltest artifacts"
+        uses: actions/download-artifact@v8
         with:
           name: generated-gooltest
           path: code/drasil-code/test/build
@@ -118,7 +120,8 @@ jobs:
         run: |
           sudo apt-get install -y graphviz fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
 
-      - uses: actions/download-artifact@v8
+      - name: "Download generated artifacts"
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: code/build
@@ -141,7 +144,7 @@ jobs:
         run: |
           sudo apt-get install -y graphviz
 
-      - name: "Download mdBook"
+      - name: "Install mdBook"
         env:
           MDBOOK_VERSION: 0.5.4
         working-directory: ${{ runner.temp }}
@@ -152,7 +155,8 @@ jobs:
           mv mdbook ~/.local/bin
           mdbook --version
 
-      - uses: actions/download-artifact@v8
+      - name: "Download generated artifacts"
+        uses: actions/download-artifact@v8
         with:
           name: generated
           path: code/build
