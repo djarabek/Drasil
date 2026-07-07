@@ -55,6 +55,7 @@ jobs:
           path: |
             code/.stack-work
             code/**/.stack-work
+            code/**/.hie
           key: ${{ runner.os }}-stack-work
 
       - name: "Install dependencies"
@@ -108,6 +109,7 @@ jobs:
           path: |
             code/.stack-work
             code/**/.stack-work
+            code/**/.hie
           key: ${{ runner.os }}-stack-work
 
       - name: "Generate Haddock docs (as test)"
@@ -177,7 +179,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: latex-logs
-          path: code/build/*/SRS/PDF
+          path: code/build
 
   mdbook:
     name: mdBook
