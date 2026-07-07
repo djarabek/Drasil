@@ -172,6 +172,13 @@ jobs:
       - name: "Compile generated TeX artifacts"
         run: make -j tex SKIP_GEN=1 SUMMARIZE_TEX=yes
 
+      - name: "Upload logs"
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: latex-logs
+          path: code/build/*/SRS/PDF
+
   mdbook:
     name: mdBook
     needs: build
