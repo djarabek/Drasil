@@ -95,12 +95,20 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: "Restore cache"
-        uses: actions/cache/restore@v5
+      - name: "Restore dependency cache"
+        uses: actions/cache/restore@v6
         with:
           path: |
             ~/.stack
           key: ${{ runner.os }}-stack-${{ hashFiles('code/stack.yaml') }}
+
+      - name: "Restore work cache"
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            code/.stack-work
+            code/**/.stack-work
+          key: ${{ runner.os }}-stack-work
 
       - name: "Generate Haddock docs (as test)"
         run: make docs
