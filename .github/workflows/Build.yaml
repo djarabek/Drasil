@@ -38,6 +38,9 @@ jobs:
       - name: "Build"
         run: make code stackArgs="--no-terminal" GHCFLAGS="-Werror -Wwarn=deprecations"
 
+      - name: "Stack Test"
+        run: make stack_test stackArgs="--no-terminal"
+
       - name: "Test built artifacts against stable"
         run: make test test_website
 

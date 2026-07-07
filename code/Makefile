@@ -271,6 +271,9 @@ test_website: $(CLEAN_GF_PREFIX)$(LOG_FOLDER_NAME) website ##@Website Test fresh
 	@echo ---------------------------------------
 	@LOG_FOLDER="$(LOG_FOLDER)" LOG_SUFFIX="$(LOG_SUFFIX)" NOISY=$(NOISY) "$(SHELL)" "$(SCRIPT_FOLDER)log_check.sh"
 
+stack_test: code
+	stack test $(stackArgs) --no-interleaved-output
+
 # First build all the Drasil packages, run all examples (no traceability graphs),
 # and then overwrite contents in the stable folder with currently generated ones.
 stabilize: $(STABILIZE_EXAMPLES) ##@Examples Overwrites the stable folder with up-to-date artifacts.
