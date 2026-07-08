@@ -150,7 +150,7 @@ jobs:
       - name: "Compile generated TeX artifacts"
         uses: xu-cheng/texlive-action@v3
         with:
-          run: make -j4 tex SKIP_GEN=1 SUMMARIZE_TEX=yes
+          run: cd code && make -j4 tex SKIP_GEN=1 SUMMARIZE_TEX=yes
 
   mdbook:
     name: mdBook
