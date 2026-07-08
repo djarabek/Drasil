@@ -141,14 +141,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: "Update apt package list"
-        run: |
-          sudo apt-get update
-
-      - name: "Install TeX requirements"
-        run: |
-          sudo apt-get install -y graphviz fonts-lmodern texlive-bibtex-extra texlive-latex-extra texlive-science texlive-luatex inkscape
-
       - name: "Download generated artifacts"
         uses: actions/download-artifact@v8
         with:
@@ -156,7 +148,9 @@ jobs:
           path: code/build
 
       - name: "Compile generated TeX artifacts"
-        run: make -j4 tex SKIP_GEN=1 SUMMARIZE_TEX=yes
+        uses: xu-cheng/texlive-action@v3
+        with:
+          run: make -j4 tex SKIP_GEN=1 SUMMARIZE_TEX=yes
 
   mdbook:
     name: mdBook
