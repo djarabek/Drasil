@@ -33,7 +33,7 @@ defs = [launcher, projectile, target]
 
 launcher, projectile, target, projSpeed, projPos, landPos, launAngle, launSpeed,
   offset, targPos, flightDur :: ConceptChunk
-launcher   = cncpt''' (mkUid "launcher")        (nounPhraseSP "launcher")
+launcher   = cncpt''' (mkUid "launcher_")        (nounPhraseSP "launcher")
   (S "where the projectile is launched from and the device that does the launching")
 projectile = cncpt''' (mkUid "projectile")      (nounPhraseSP "projectile")
   (S "the object to be launched at the target")
