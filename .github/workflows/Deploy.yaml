@@ -262,6 +262,7 @@ jobs:
     name: "Cleanup Cache"
     needs: [build, haddock]
     runs-on: ubuntu-latest
+    working-directory: .
     permissions:
       actions: write
       contents: read
