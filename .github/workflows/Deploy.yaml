@@ -85,7 +85,7 @@ jobs:
             code/.stack-work
             code/**/.stack-work
             code/**/.hie
-          key: ${{ runner.os }}-stack-work-${{ github.sha }}
+          key: ${{ runner.os }}-stack-work--${{ github.sha }}
 
   haddock:
     name: Haddock
@@ -116,7 +116,7 @@ jobs:
             code/.stack-work
             code/**/.stack-work
             code/**/.hie
-          key: ${{ runner.os }}-stack-work-haddock-${{ github.sha }}
+          key: ${{ runner.os }}-stack-work-haddock--${{ github.sha }}
 
   gooltest:
     name: "Compile GOOL"
@@ -283,4 +283,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          JQ_FILTER: map(select(.key != "${{ runner.os }}-stack-work-${{ github.sha }}" and .key != "${{ runner.os }}-stack-work-haddock-${{ github.sha }}")) | .[].id
+          JQ_FILTER: map(select(.key != "${{ runner.os }}-stack-work--${{ github.sha }}" and .key != "${{ runner.os }}-stack-work-haddock--${{ github.sha }}")) | .[].id
