@@ -63,7 +63,9 @@ jobs:
             code/.stack-work
             code/**/.stack-work
             code/**/.hie
-          key: ${{ runner.os }}-stack-work
+          key: ${{ runner.os }}-stack-work-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-stack-work-
 
       - name: "Install dependencies"
         run: make stackArgs="--no-terminal" deps
@@ -117,7 +119,9 @@ jobs:
             code/.stack-work
             code/**/.stack-work
             code/**/.hie
-          key: ${{ runner.os }}-stack-work-haddock
+          key: ${{ runner.os }}-stack-work-haddock-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-stack-work-haddock-
 
       - name: "Generate Haddock docs (as test)"
         run: make docs
