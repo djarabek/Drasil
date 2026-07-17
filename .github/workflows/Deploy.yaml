@@ -269,7 +269,7 @@ jobs:
       - name: "Cleanup Cache"
         run: |
           echo "Fetching list of cache key"
-          oldCacheKeys=$(gh cache list --key Linux-stack-work --json id,key --jq "$JQ_FILTER")
+          oldCacheKeys=$(gh cache list --key ${{ runner.os }}-stack-work --json id,key --jq "$JQ_FILTER")
 
           ## Setting this to not fail the workflow while deleting cache keys.
           set +e
@@ -283,4 +283,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
-          JQ_FILTER: map(select(.key != "Linux-stack-work-${{ github.sha }}" and .key != "Linux-stack-work-haddock-${{ github.sha }}")) | .[].key
+          JQ_FILTER: map(select(.key != "${{ runner.os }}-stack-work-${{ github.sha }}" and .key != "${{ runner.os }}-stack-work-haddock-${{ github.sha }}")) | .[].id
